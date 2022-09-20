@@ -30,3 +30,11 @@ batch_cohorts <- convert_wuenic_prime_coverage (wuenic_file = "../data/wuenic202
 # stop time
 print (Sys.time ())
 toc ()
+
+# -----------------------
+# analysis outline
+# - convert wuenic coverage to prime format
+# - run batch cohorts
+# - compare pre- and post-vaccine burden
+# - generate equity impact
+# -----------------------

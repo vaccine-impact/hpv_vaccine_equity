@@ -563,11 +563,11 @@ vaccine_coverage_average <- function (batch_cohorts,
                vaccination_age, "_", vaccine, ".pdf"))
   
   print (ggplot (vaccine_impact_coverage_tab, 
-                 aes (x = factor (country_code, level = country_code), y = coverage, fill = coverage)) + 
+                 aes (x = factor (country_code, level = country_code), y = (coverage * 100), fill = coverage)) + 
            geom_bar (stat="identity") + 
            labs (
              x = NULL,
-             y = "vaccine coverage",
+             y = "vaccine coverage (%)",
              title = "Average coverage of HPV vaccination during 2010-2021"
            ) +
            theme_classic (base_size = 8) +

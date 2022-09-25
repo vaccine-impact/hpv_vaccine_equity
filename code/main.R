@@ -77,6 +77,9 @@ vaccine_impact_coverage_tab <- vaccine_coverage_average (batch_cohorts,
 con_index <- concentration_index_curve (vaccine_impact_coverage_tab)
 print (summary (con_index))
 
+# save table for 74 countries (analysed in this study)
+fwrite (vaccine_impact_coverage_tab [, country_code, Country], 
+        file = "../tables/Table_countries.csv")
 
 # end of parallelism
 stopCluster (cl)                    

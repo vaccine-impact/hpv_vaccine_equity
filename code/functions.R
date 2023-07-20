@@ -6,11 +6,12 @@
 # ------------------------------------------------------------------------------
 # Convert HPV vaccination coverage in wuenic file to PRIME format
 # ------------------------------------------------------------------------------
-convert_wuenic_prime_coverage <- function (wuenic_file) {
+convert_wuenic_prime_coverage <- function (wuenic_file, 
+                                           vaccination_age) {
   
-  # Human papillomavirus (HPV) immunization coverage estimates (July 2022)
-  # https://data.unicef.org/wp-content/uploads/2016/07/wuenic2021rev_hpv-estimates.xlsx
-  wuenic_dt <- read_xlsx (path      = wuenic_file, 
+  # Human papillomavirus (HPV) immunization coverage estimates (July 2023)
+  # https://data.unicef.org/resources/dataset/immunization/
+  wuenic_dt <- read_xls (path      = wuenic_file, 
                           col_names = TRUE)
   
   # change to data.table format
@@ -18,14 +19,15 @@ convert_wuenic_prime_coverage <- function (wuenic_file) {
   
   # 15HPVC_F: HPV Vaccination coverage by age 15, last dose, females
   # extract rows of interest
-  dt <- wuenic_dt [`vaccine-code` == "15HPVC_F", c('iso-code', 'year', 'coverage')]
+  dt <- wuenic_dt [`vaccine_code` == "15HPVC_F", c('iso3c', 'year', 'value')]
 
-  # set age of vaccination to 15 years  
-  dt [, age_first := 15]
-  dt [, age_last  := 15]
+  # set age of vaccination
+  dt [, age_first := vaccination_age]
+  dt [, age_last  := vaccination_age]
 
   # change colnames
-  setnames (dt, "iso-code", "country_code")
+  setnames (dt, "iso3c", "country_code")
+  setnames (dt, "value", "coverage")
   
   # set column order
   setcolorder (dt, 
@@ -44,15 +46,55 @@ convert_wuenic_prime_coverage <- function (wuenic_file) {
 # ------------------------------------------------------------------------------
 # streamline batch cohorts table
 # ------------------------------------------------------------------------------
-streamline_cohorts <- function (cohorts) {
+streamline_cohorts <- function (cohorts, 
+                                vaccination_age) {
   
   # change coverage to proportion between 0 and 1
   cohorts [, coverage := coverage / 100]  
   
   # remove non-UNWPP countries (Andorra, Cook Islands, Palau, San Marino) -- demography data is missing
   # remove Seychelles (some data is missing -- check later)
+  # remove Saint Vincent and the Grenadines (check later)
   cohorts <- cohorts [(country_code != "AND") & (country_code != "COK") & (country_code != "PLW") & (country_code != "SMR"), ]
   cohorts <- cohorts [(country_code != "SYC")]
+  cohorts <- cohorts [(country_code != "VCT")]
+  
+  # DEBUG
+  # cohorts <- cohorts [(country_code == "AND")]
+  # cohorts <- cohorts [(country_code == "COK")]
+  # cohorts <- cohorts [(country_code == "PLW")]
+  # cohorts <- cohorts [(country_code == "SMR")]
+  
+  # cohorts <- cohorts [(country_code == "SYC")]
+  # cohorts <- cohorts [(country_code == "VCT")]
+  
+  # ok: 
+  # [1] "ARE" "ARG" "ARM" "AUS" "AUT" "BEL" "BGR"
+  # [9] "BHS" "BLZ" "BOL" "BRA" "BRB" "BRN" "BTN" "BWA"
+  # [17] "CAN" "CHE" "CHL" "COL" "CYP" "DEU" "DNK"
+  # [25] "DOM" "ECU" "ESP" "EST" "ETH" "FIN" "FJI" "FRA"
+  # [33] "FSM" "GBR" "GMB" "GTM" "GUY" "HND" "HUN" "IDN"
+  # [41] "IRL" "ISL" "ISR" "ITA" "JAM" "JPN" "KEN" "KOR"
+  # [49] "LAO" "LKA" "LTU" "LUX" "LVA" "MDA" "MEX" "MHL"
+  # [57] "MKD" "MLT" "MRT" "MUS" "MYS" "NLD" "NOR" "NZL"
+  # [65] "PAN" "PER" "PHL" "PRT" "PRY" "RWA" "SGP"
+  # [73] "SLB" "SUR" "SVN" "SWE" "THA" "TKM"
+  # [81] "TON" "TTO" "TZA" "UGA" "URY" "USA" "VCT" "ZAF"
+  # [89] "ZMB" "ZWE"
+  
+  # [1] "AND" "ARE" "ARG" "ARM" "AUS" "AUT" "BEL" "BGR"
+  # [9] "BHS" "BLZ" "BOL" "BRA" "BRB" "BRN" "BTN" "BWA"
+  # [17] "CAN" "CHE" "CHL" "COK" "COL" "CYP" "DEU" "DNK"
+  # [25] "DOM" "ECU" "ESP" "EST" "ETH" "FIN" "FJI" "FRA"
+  # [33] "FSM" "GBR" "GMB" "GTM" "GUY" "HND" "HUN" "IDN"
+  # [41] "IRL" "ISL" "ISR" "ITA" "JAM" "JPN" "KEN" "KOR"
+  # [49] "LAO" "LKA" "LTU" "LUX" "LVA" "MDA" "MEX" "MHL"
+  # [57] "MKD" "MLT" "MRT" "MUS" "MYS" "NLD" "NOR" "NZL"
+  # [65] "PAN" "PER" "PHL" "PLW" "PRT" "PRY" "RWA" "SGP"
+  # [73] "SLB" "SMR" "SUR" "SVN" "SWE" "SYC" "THA" "TKM"
+  # [81] "TON" "TTO" "TZA" "UGA" "URY" "USA" "ZAF"
+  # [89] "ZMB" "ZWE"
+  
   
   # create new/empty batch cohort table
   batch_cohorts <- cohorts [0, ]
@@ -72,9 +114,9 @@ streamline_cohorts <- function (cohorts) {
     
     # create zero coverage data table for a single country
     tdt <- data.table (country_code = country, 
-                       year         = 2010:2021, 
-                       age_first    = 15, 
-                       age_last     = 15, 
+                       year         = 2010:2022, 
+                       age_first    = vaccination_age, 
+                       age_last     = vaccination_age, 
                        coverage     = 0)
     
     
@@ -438,7 +480,7 @@ compute_vaccine_impact_country <- function (allburden,
     toplot = plotwhat[i]
     
     # p <- ggplot (country_vaccine_impact,
-    print (ggplot (country_vaccine_impact,
+    fig <- ggplot (country_vaccine_impact,
                    aes (x = reorder (country, -get(toplot)), y = get(toplot), fill = get(toplot))) +
              geom_bar (stat="identity") +
              labs (
@@ -456,11 +498,23 @@ compute_vaccine_impact_country <- function (allburden,
              # coord_flip() +
              theme (axis.text.x=element_text(size=rel(0.75))) + 
              theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+    
+    print (fig)
+    
+    # save plot as png file
+    ggsave (filename = paste0 ("../figures/Figure_vaccine_impact_age",
+                               vaccination_age, "_", vaccine, ".png"), 
+            plot     = fig, 
+            dpi      = 600)
+    
            
-    )
   })
   
   dev.off ()
+  
+  
+
+  
   # ----------------------------------------------------------------------------
   
   # save streamlined table of vaccine impact
@@ -548,7 +602,8 @@ compute_vaccine_impact_country <- function (allburden,
 # average vaccine coverage
 # ------------------------------------------------------------------------------
 vaccine_coverage_average <- function (batch_cohorts, 
-                                      vaccine_impact_tab) {
+                                      vaccine_impact_tab, 
+                                      plot_curve) {
   
   # average vaccine coverage
   coverage_dt <- batch_cohorts [, lapply (.SD, mean, na.rm=TRUE), 
@@ -559,28 +614,40 @@ vaccine_coverage_average <- function (batch_cohorts,
   vaccine_impact_coverage_tab <- coverage_dt [vaccine_impact_tab, on = .(country_code = country)]
   
   # plot -- average vaccine coverage ordered by vaccine impact
-  pdf (paste0 ("../figures/Figure_vaccine_coverage_age",
-               vaccination_age, "_", vaccine, ".pdf"))
-  
-  print (ggplot (vaccine_impact_coverage_tab, 
-                 aes (x = factor (country_code, level = country_code), y = (coverage * 100), fill = coverage)) + 
-           geom_bar (stat="identity") + 
-           labs (
-             x = NULL,
-             y = "vaccine coverage (%)",
-             title = "Average coverage of HPV vaccination during 2010-2021"
-           ) +
-           theme_classic (base_size = 8) +
-           theme(legend.position="none") +
-           theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-           scale_y_continuous (labels = scales::comma) +
-           scale_fill_gradientn(colours = rev(terrain.colors(10))) +
-           theme (axis.text.x=element_text(size=rel(0.75))) +
-           theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
-  )
-  
-  dev.off ()
-  
+  if (plot_curve == T) {
+    
+    pdf (paste0 ("../figures/Figure_vaccine_coverage_age",
+                 vaccination_age, "_", vaccine, ".pdf"))
+    
+      
+    fig <- ggplot (vaccine_impact_coverage_tab, 
+                   aes (x = factor (country_code, level = country_code), y = (coverage * 100), fill = coverage)) + 
+      geom_bar (stat="identity") + 
+      labs (
+        x = NULL,
+        y = "vaccine coverage (%)",
+        title = "Average coverage of HPV vaccination during 2010-2022"
+      ) +
+      theme_classic (base_size = 8) +
+      theme(legend.position="none") +
+      theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+      scale_y_continuous (labels = scales::comma) +
+      scale_fill_gradientn(colours = rev(terrain.colors(10))) +
+      theme (axis.text.x=element_text(size=rel(0.75))) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+    
+    print (fig)
+    
+    dev.off ()
+    
+    # save plot as png file
+    ggsave (filename = paste0 ("../figures/Figure_vaccine_coverage_age",
+                               vaccination_age, "_", vaccine, ".png"), 
+            plot     = fig, 
+            dpi      = 600)
+    
+  }
+
   return (vaccine_impact_coverage_tab)
   
 } # end of function -- vaccine_coverage_average
@@ -593,8 +660,9 @@ vaccine_coverage_average <- function (batch_cohorts,
 plot_hci <- function(x, ...) {
   
   # figure for concentration curve
-  pdf (paste0 ("../figures/Figure_concentration_curve_age",
-               vaccination_age, "_", vaccine, ".pdf"))
+  png (paste0 ("../figures/Figure_concentration_curve_age",
+               vaccination_age, "_", vaccine, ".png"), 
+       width = 6000, height = 6000, units = "px", pointsize = 144)
   
   if (!any(class(x) == 'hci')) stop ("Object is not of class hci")
   myOrder <- order(x$fractional_rank)
@@ -610,6 +678,12 @@ plot_hci <- function(x, ...) {
   
   dev.off ()
   
+  # # save plot as png file
+  # ggsave (filename = paste0 ("../figures/Figure_concentration_curve_age",
+  #                            vaccination_age, "_", vaccine, ".png"), 
+  #         plot     = fig, 
+  #         dpi      = 600)
+  
   return ()
   
 } # end of function -- plot_hci
@@ -617,7 +691,7 @@ plot_hci <- function(x, ...) {
 
 
 # estimate concentration index and plot concentration curve
-concentration_index_curve <- function (vaccine_impact_coverage_tab) {
+concentration_index_curve <- function (vaccine_impact_coverage_tab, plot_curve) {
   
   # make copy of vaccine impact and coverage table
   vdt <- copy (vaccine_impact_coverage_tab)
@@ -626,13 +700,43 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab) {
   vdt [, ranking := 1:length (vaccine_impact_coverage_tab$country_code)]
   
   # estimate concentration index
-  con_index <- with (vdt, ci (x = ranking, y = coverage))
+  con_index <- with (vdt, ci (x = ranking, y = coverage, type = "CIc"))
   
   # plot concentration curve
-  plot_hci (con_index)
+  if (plot_curve == TRUE) {
+    
+    plot_hci (con_index)
+  }
   
   # return concentration index estimates (includes mean and 95% confidence interval)
   return (con_index)
 
 } # end of function -- concentration_index_curve
+# ------------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------------
+# generate plot -- concentration indices by year
+plot_con_index_year <- function (dt_con_index) {
+  
+  fig <- ggplot (dt_con_index, 
+                 aes (x = year, y = con_ind)) + 
+    geom_point () + 
+    labs (
+      x = "year",
+      y = "concentration index",
+      title = "Concentration index for each year during 2010-2022"
+    ) + 
+    theme_classic () + 
+    geom_hline (yintercept = 0, linetype = "dashed")
+  
+  pdf (paste0 ("../figures/Figure_con_index_year",
+               vaccination_age, "_", vaccine, ".pdf"))
+  
+  print (fig)
+  
+  dev.off ()
+  
+  
+} # end of function -- plot_con_index_year
 # ------------------------------------------------------------------------------

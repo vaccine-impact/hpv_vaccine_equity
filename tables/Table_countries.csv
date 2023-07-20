@@ -1,75 +1,85 @@
-Country,country_code
-Zimbabwe,ZWE
-Gambia,GMB
-Tanzania,TZA
-Zambia,ZMB
-Fiji,FJI
-Uganda,UGA
-Botswana,BWA
-Marshall Islands,MHL
-Belize,BLZ
-Paraguay,PRY
-Rwanda,RWA
-Micronesia (Federated States of),FSM
-Solomon Islands,SLB
-Bolivia,BOL
-Jamaica,JAM
-Ecuador,ECU
-Suriname,SUR
-Peru,PER
-Trinidad & Tobago,TTO
-Indonesia,IDN
-Guyana,GUY
-South Africa,ZAF
-Barbados,BRB
-Guatemala,GTM
-Bahamas,BHS
-Mauritius,MUS
-Philippines,PHL
-Panama,PAN
-Ethiopia,ETH
-Argentina,ARG
-Malaysia,MYS
-Honduras,HND
-Chile,CHL
-Bulgaria,BGR
-Colombia,COL
-Brazil,BRA
-Latvia,LVA
-Lithuania,LTU
-Bhutan,BTN
-Laos,LAO
-Mexico,MEX
-Cyprus,CYP
-Singapore,SGP
-Uruguay,URY
-Hungary,HUN
-Estonia,EST
-Armenia,ARM
-Portugal,PRT
-Brunei,BRN
-South Korea,KOR
-Japan,JPN
-North Macedonia,MKD
-Denmark,DNK
-Slovenia,SVN
-Ireland,IRL
-Sweden,SWE
-Iceland,ISL
-Norway,NOR
-Israel,ISR
-France,FRA
-Germany,DEU
-New Zealand,NZL
-Luxembourg,LUX
-Belgium,BEL
-Malta,MLT
-Canada,CAN
-United States,USA
-Australia,AUS
-Spain,ESP
-United Kingdom,GBR
-Netherlands,NLD
-Italy,ITA
-Switzerland,CHE
-Finland,FIN
+country_code,Country
+ARE,United Arab Emirates
+ARG,Argentina
+ARM,Armenia
+AUS,Australia
+AUT,Austria
+BEL,Belgium
+BGR,Bulgaria
+BHS,Bahamas
+BLZ,Belize
+BOL,Bolivia
+BRA,Brazil
+BRB,Barbados
+BRN,Brunei
+BTN,Bhutan
+BWA,Botswana
+CAN,Canada
+CHE,Switzerland
+CHL,Chile
+COL,Colombia
+CYP,Cyprus
+DEU,Germany
+DNK,Denmark
+DOM,Dominican Republic
+ECU,Ecuador
+ESP,Spain
+EST,Estonia
+ETH,Ethiopia
+FIN,Finland
+FJI,Fiji
+FRA,France
+FSM,Micronesia (Federated States of)
+GBR,United Kingdom
+GMB,Gambia
+GTM,Guatemala
+GUY,Guyana
+HND,Honduras
+HUN,Hungary
+IDN,Indonesia
+IRL,Ireland
+ISL,Iceland
+ISR,Israel
+ITA,Italy
+JAM,Jamaica
+JPN,Japan
+KEN,Kenya
+KOR,South Korea
+LAO,Laos
+LKA,Sri Lanka
+LTU,Lithuania
+LUX,Luxembourg
+LVA,Latvia
+MDA,Moldova
+MEX,Mexico
+MHL,Marshall Islands
+MKD,North Macedonia
+MLT,Malta
+MRT,Mauritania
+MUS,Mauritius
+MYS,Malaysia
+NLD,Netherlands
+NOR,Norway
+NZL,New Zealand
+PAN,Panama
+PER,Peru
+PHL,Philippines
+PRT,Portugal
+PRY,Paraguay
+RWA,Rwanda
+SGP,Singapore
+SLB,Solomon Islands
+SUR,Suriname
+SVN,Slovenia
+SWE,Sweden
+THA,Thailand
+TKM,Turkmenistan
+TON,Tonga
+TTO,Trinidad & Tobago
+TZA,Tanzania
+UGA,Uganda
+URY,Uruguay
+USA,United States
+ZAF,South Africa
+ZMB,Zambia
+ZWE,Zimbabwe

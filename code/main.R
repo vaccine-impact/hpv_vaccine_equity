@@ -75,9 +75,9 @@ vaccine_impact_tab <- compute_vaccine_impact_country (allburden,
                                                       vaccination_age = vaccination_age)
 
 # sort by vaccine impact (by deaths averted per vaccinated girl)
-# setorder (vaccine_impact_tab, - deaths_averted_perVG) 
+setorder (vaccine_impact_tab, - deaths_averted_perVG) 
 # setorder (vaccine_impact_tab, - cases_averted_perVG)
-setorder (vaccine_impact_tab, - dalys_averted_perVG)
+# setorder (vaccine_impact_tab, - dalys_averted_perVG)
 
 # average vaccine coverage
 vaccine_impact_coverage_tab <- vaccine_coverage_average (batch_cohorts, 

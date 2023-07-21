@@ -740,3 +740,25 @@ plot_con_index_year <- function (dt_con_index) {
   
 } # end of function -- plot_con_index_year
 # ------------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
+# attach World bank income levels to countries
+world_bank_income_level <- function (countries_dt) {
+  
+  # download updated country and region information from World Bank API
+  wb_dt <- wbcountries ()
+  
+  # append world bank income level to countries 
+  contries_wb_dt <- merge (x    = countries_dt, 
+                           y    = wb_dt, 
+                           by.x = "country_code", 
+                           by.y = "iso3c")
+  
+  
+  return (contries_wb_dt)
+  
+}  # end of function -- world_bank_income_level
+# ------------------------------------------------------------------------------
+
+

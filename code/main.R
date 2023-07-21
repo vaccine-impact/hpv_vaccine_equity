@@ -99,6 +99,9 @@ countries_dt <- countries_dt [order (country_code)]
 
 fwrite (x    = countries_dt, 
         file = "../tables/Table_countries.csv")
+
+# attach World bank income levels to countries
+contries_wb_dt <- world_bank_income_level (countries_dt)
 # -----------------------
 
 

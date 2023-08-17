@@ -1,2 +1,2 @@
 # Equity impact of HPV vaccination
-Aim: To assess the inequities in cervical cancer burden across countries pre and post-introduction of HPV vaccination from 2010 to 2020.
+Aim: to analyse the equity impact of HPV vaccination on the lifetime projections of cervical cancer burden among vaccinated cohorts of 2010-2022 in 84 countries

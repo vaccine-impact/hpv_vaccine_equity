@@ -15,6 +15,7 @@ library (doParallel)          # foreach parallel adaptor for the 'parallel' Pack
 library (ggforce)
 library (ggpubr)
 library (rineq)               # health inequalities
+library (wbstats)             # download updated country and region information from World bank
 library (prime)               # prime package
 
 # remove all objects from workspace

@@ -479,25 +479,27 @@ compute_vaccine_impact_country <- function (allburden,
     # which burden to plot
     toplot = plotwhat[i]
     
-    # p <- ggplot (country_vaccine_impact,
+    # generate plot
     fig <- ggplot (country_vaccine_impact,
                    aes (x = reorder (country, -get(toplot)), y = get(toplot), fill = get(toplot))) +
              geom_bar (stat="identity") +
              labs (
                x = NULL,
-               y = y_axis[i],
+               y = paste0 (y_axis[i],
+                           " per 1000 vaccinated girls"),
                title = paste0 (y_axis[i],
                                " per 1000 vaccinated girls",
-                               " (vaccination age = ", vaccination_age, " years / ", vaccine_type, " vaccine)")
+                               " (vaccination age = ", vaccination_age, " years / ", vaccine_type, " vaccine)"),
+               fill = ""
              ) +
              theme_classic (base_size = 8) +
-             theme(legend.position="none") +
+             # theme(legend.position="none") +
              theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
              scale_y_continuous (labels = scales::comma) +
              scale_fill_gradientn(colours = rev(terrain.colors(10))) +
              # coord_flip() +
-             theme (axis.text.x=element_text(size=rel(0.75))) + 
-             theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+             theme (axis.text.x=element_text(size=rel(0.75))) +
+             theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
     
     print (fig)
     
@@ -621,20 +623,21 @@ vaccine_coverage_average <- function (batch_cohorts,
     
       
     fig <- ggplot (vaccine_impact_coverage_tab, 
-                   aes (x = factor (country_code, level = country_code), y = (coverage * 100), fill = coverage)) + 
+                   aes (x = factor (country_code, level = country_code), y = (coverage * 100), fill = coverage * 100)) + 
       geom_bar (stat="identity") + 
       labs (
         x = NULL,
         y = "vaccine coverage (%)",
-        title = "Average coverage of HPV vaccination during 2010-2022"
+        title = "Average coverage of HPV vaccination during 2010-2022",
+        fill = ""
       ) +
       theme_classic (base_size = 8) +
-      theme(legend.position="none") +
+      # theme(legend.position="none") +
       theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
       scale_y_continuous (labels = scales::comma) +
-      scale_fill_gradientn(colours = rev(terrain.colors(10))) +
+      scale_fill_gradientn (colours = rev(terrain.colors(10))) +
       theme (axis.text.x=element_text(size=rel(0.75))) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+      theme (axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
     
     print (fig)
     
@@ -747,7 +750,7 @@ plot_con_index_year <- function (dt_con_index) {
 world_bank_income_level <- function (countries_dt) {
   
   # download updated country and region information from World Bank API
-  wb_dt <- wbcountries ()
+  wb_dt <- wb_countries ()
   
   # append world bank income level to countries 
   contries_wb_dt <- merge (x    = countries_dt, 

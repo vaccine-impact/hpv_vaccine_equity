@@ -503,11 +503,13 @@ compute_vaccine_impact_country <- function (allburden,
     
     print (fig)
     
-    # save plot as png file
-    ggsave (filename = paste0 ("../figures/Figure_vaccine_impact_age",
-                               vaccination_age, "_", vaccine, ".png"), 
-            plot     = fig, 
-            dpi      = 600)
+    # save plot as png file (for deaths averted on y-axis)
+    if (toplot == "deaths_averted_perVG") {
+      ggsave (filename = paste0 ("../figures/Figure_vaccine_impact_age",
+                                 vaccination_age, "_", vaccine, ".png"), 
+              plot     = fig, 
+              dpi      = 600)
+    }
     
            
   })

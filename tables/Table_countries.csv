@@ -1,85 +1,85 @@
-country_code,Country
-ARE,United Arab Emirates
-ARG,Argentina
-ARM,Armenia
-AUS,Australia
-AUT,Austria
-BEL,Belgium
-BGR,Bulgaria
-BHS,Bahamas
-BLZ,Belize
-BOL,Bolivia
-BRA,Brazil
-BRB,Barbados
-BRN,Brunei
-BTN,Bhutan
-BWA,Botswana
-CAN,Canada
-CHE,Switzerland
-CHL,Chile
-COL,Colombia
-CYP,Cyprus
-DEU,Germany
-DNK,Denmark
-DOM,Dominican Republic
-ECU,Ecuador
-ESP,Spain
-EST,Estonia
-ETH,Ethiopia
-FIN,Finland
-FJI,Fiji
-FRA,France
-FSM,Micronesia (Federated States of)
-GBR,United Kingdom
-GMB,Gambia
-GTM,Guatemala
-GUY,Guyana
-HND,Honduras
-HUN,Hungary
-IDN,Indonesia
-IRL,Ireland
-ISL,Iceland
-ISR,Israel
-ITA,Italy
-JAM,Jamaica
-JPN,Japan
-KEN,Kenya
-KOR,South Korea
-LAO,Laos
-LKA,Sri Lanka
-LTU,Lithuania
-LUX,Luxembourg
-LVA,Latvia
-MDA,Moldova
-MEX,Mexico
-MHL,Marshall Islands
-MKD,North Macedonia
-MLT,Malta
-MRT,Mauritania
-MUS,Mauritius
-MYS,Malaysia
-NLD,Netherlands
-NOR,Norway
-NZL,New Zealand
-PAN,Panama
-PER,Peru
-PHL,Philippines
-PRT,Portugal
-PRY,Paraguay
-RWA,Rwanda
-SGP,Singapore
-SLB,Solomon Islands
-SUR,Suriname
-SVN,Slovenia
-SWE,Sweden
-THA,Thailand
-TKM,Turkmenistan
-TON,Tonga
-TTO,Trinidad & Tobago
-TZA,Tanzania
-UGA,Uganda
-URY,Uruguay
-USA,United States
-ZAF,South Africa
-ZMB,Zambia
-ZWE,Zimbabwe
+ISO3 country code,Country,Income level,WHO region
+ARE,United Arab Emirates,High income,Eastern Mediterranean
+ARG,Argentina,Upper middle income,Americas
+ARM,Armenia,Upper middle income,Europe
+AUS,Australia,High income,Western Pacific
+AUT,Austria,High income,Europe
+BEL,Belgium,High income,Europe
+BGR,Bulgaria,Upper middle income,Europe
+BHS,Bahamas,High income,Americas
+BLZ,Belize,Upper middle income,Americas
+BOL,Bolivia,Lower middle income,Americas
+BRA,Brazil,Upper middle income,Americas
+BRB,Barbados,High income,Americas
+BRN,Brunei,High income,Western Pacific
+BTN,Bhutan,Lower middle income,South-East Asia
+BWA,Botswana,Upper middle income,Africa
+CAN,Canada,High income,Americas
+CHE,Switzerland,High income,Europe
+CHL,Chile,High income,Americas
+COL,Colombia,Upper middle income,Americas
+CYP,Cyprus,High income,Europe
+DEU,Germany,High income,Europe
+DNK,Denmark,High income,Europe
+DOM,Dominican Republic,Upper middle income,Americas
+ECU,Ecuador,Upper middle income,Americas
+ESP,Spain,High income,Europe
+EST,Estonia,High income,Europe
+ETH,Ethiopia,Low income,Africa
+FIN,Finland,High income,Europe
+FJI,Fiji,Upper middle income,Western Pacific
+FRA,France,High income,Europe
+FSM,Micronesia (Federated States of),Lower middle income,Western Pacific
+GBR,United Kingdom,High income,Europe
+GMB,Gambia,Low income,Africa
+GTM,Guatemala,Upper middle income,Americas
+GUY,Guyana,High income,Americas
+HND,Honduras,Lower middle income,Americas
+HUN,Hungary,High income,Europe
+IDN,Indonesia,Upper middle income,South-East Asia
+IRL,Ireland,High income,Europe
+ISL,Iceland,High income,Europe
+ISR,Israel,High income,Europe
+ITA,Italy,High income,Europe
+JAM,Jamaica,Upper middle income,Americas
+JPN,Japan,High income,Western Pacific
+KEN,Kenya,Lower middle income,Africa
+KOR,South Korea,High income,Western Pacific
+LAO,Laos,Lower middle income,Western Pacific
+LKA,Sri Lanka,Lower middle income,South-East Asia
+LTU,Lithuania,High income,Europe
+LUX,Luxembourg,High income,Europe
+LVA,Latvia,High income,Europe
+MDA,Moldova,Upper middle income,Europe
+MEX,Mexico,Upper middle income,Americas
+MHL,Marshall Islands,Upper middle income,Western Pacific
+MKD,North Macedonia,Upper middle income,Europe
+MLT,Malta,High income,Europe
+MRT,Mauritania,Lower middle income,Africa
+MUS,Mauritius,Upper middle income,Africa
+MYS,Malaysia,Upper middle income,Western Pacific
+NLD,Netherlands,High income,Europe
+NOR,Norway,High income,Europe
+NZL,New Zealand,High income,Western Pacific
+PAN,Panama,High income,Americas
+PER,Peru,Upper middle income,Americas
+PHL,Philippines,Lower middle income,Western Pacific
+PRT,Portugal,High income,Europe
+PRY,Paraguay,Upper middle income,Americas
+RWA,Rwanda,Low income,Africa
+SGP,Singapore,High income,Western Pacific
+SLB,Solomon Islands,Lower middle income,Western Pacific
+SUR,Suriname,Upper middle income,Americas
+SVN,Slovenia,High income,Europe
+SWE,Sweden,High income,Europe
+THA,Thailand,Upper middle income,South-East Asia
+TKM,Turkmenistan,Upper middle income,Europe
+TON,Tonga,Upper middle income,Western Pacific
+TTO,Trinidad & Tobago,High income,Americas
+TZA,Tanzania,Lower middle income,Africa
+UGA,Uganda,Low income,Africa
+URY,Uruguay,High income,Americas
+USA,United States,High income,Americas
+ZAF,South Africa,Upper middle income,Africa
+ZMB,Zambia,Lower middle income,Africa
+ZWE,Zimbabwe,Lower middle income,Africa

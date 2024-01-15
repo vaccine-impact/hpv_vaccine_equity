@@ -1,0 +1,174 @@
+[1] "84"               "all 84 countries"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concent[1] "2024-01-16 01:13:02 JST"
+18.12 sec elapsed
+:
+ 0.3331976 
+
+Variance:
+ 0.001194819 
+
+95% Confidence Interval:
+ 0.2654491 0.400946 
+NULL
+[1] "41"          "High income"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.3518207 
+
+Variance:
+ 0.002613333 
+
+95% Confidence Interval:
+ 0.2516259 0.4520156 
+NULL
+[1] "26"                  "Upper middle income"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.05628851 
+
+Variance:
+ 0.008587616 
+
+95% Confidence Interval:
+ -0.1253402 0.2379172 
+NULL
+[1] "13"                  "Lower middle income"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.09036274 
+
+Variance:
+ 0.04009058 
+
+95% Confidence Interval:
+ -0.3020737 0.4827991 
+NULL
+[1] "4"          "Low income"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.5544218 
+
+Variance:
+ 0.03923588 
+
+95% Confidence Interval:
+ 0.1661911 0.9426524 
+NULL
+[1] "23"       "Americas"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.3772697 
+
+Variance:
+ 0.006121918 
+
+95% Confidence Interval:
+ 0.2239169 0.5306226 
+NULL
+[1] "30"     "Europe"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.3101089 
+
+Variance:
+ 0.003833482 
+
+95% Confidence Interval:
+ 0.1887575 0.4314603 
+NULL
+[1] "14"              "Western Pacific"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.356678 
+
+Variance:
+ 0.01204705 
+
+95% Confidence Interval:
+ 0.1415543 0.5718018 
+NULL
+[1] "4"               "South-East Asia"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.2485352 
+
+Variance:
+ 0.128013 
+
+95% Confidence Interval:
+ -0.4527185 0.9497888 
+NULL
+[1] "12"     "Africa"
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.003791887 
+
+Variance:
+ 0.0115741 
+
+95% Confidence Interval:
+ -0.2070669 0.2146506 
+NULL
+Call:
+ci(x = ranking, y = coverage, type = "CIc")
+
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
+ 0.3331976 
+
+Variance:
+ 0.001194819 
+
+95% Confidence Interval:
+ 0.2654491 0.400946 
+NULL

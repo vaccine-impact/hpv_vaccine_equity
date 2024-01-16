@@ -60,8 +60,8 @@ registerDoParallel (cl)             # start of parallelisation
 # uncomment for full run
 # run batch file for vaccination of cohorts and estimate vaccination impact
 # results_file <- estimate_vaccine_impact (vaccine         = vaccine,
-#                                        vaccination_age = vaccination_age,
-#                                        canc.inc        = "2020")
+#                                          vaccination_age = vaccination_age,
+#                                          canc.inc        = "2020")
 # ------------------------------------------------------------------------------
 
 

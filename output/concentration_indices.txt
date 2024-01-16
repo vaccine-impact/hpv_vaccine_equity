@@ -2,9 +2,10 @@
 Call:
 ci(x = ranking, y = coverage, type = "CIc")
 
-Type of Concent[1] "2024-01-16 01:13:02 JST"
-18.12 sec elapsed
-:
+Type of Concentration Index:
+ CIc 
+
+Health Concentration Index:
  0.3331976 
 
 Variance:

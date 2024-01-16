@@ -59,42 +59,6 @@ streamline_cohorts <- function (cohorts,
   cohorts <- cohorts [(country_code != "SYC")]
   cohorts <- cohorts [(country_code != "VCT")]
   
-  # DEBUG
-  # cohorts <- cohorts [(country_code == "AND")]
-  # cohorts <- cohorts [(country_code == "COK")]
-  # cohorts <- cohorts [(country_code == "PLW")]
-  # cohorts <- cohorts [(country_code == "SMR")]
-  
-  # cohorts <- cohorts [(country_code == "SYC")]
-  # cohorts <- cohorts [(country_code == "VCT")]
-  
-  # ok: 
-  # [1] "ARE" "ARG" "ARM" "AUS" "AUT" "BEL" "BGR"
-  # [9] "BHS" "BLZ" "BOL" "BRA" "BRB" "BRN" "BTN" "BWA"
-  # [17] "CAN" "CHE" "CHL" "COL" "CYP" "DEU" "DNK"
-  # [25] "DOM" "ECU" "ESP" "EST" "ETH" "FIN" "FJI" "FRA"
-  # [33] "FSM" "GBR" "GMB" "GTM" "GUY" "HND" "HUN" "IDN"
-  # [41] "IRL" "ISL" "ISR" "ITA" "JAM" "JPN" "KEN" "KOR"
-  # [49] "LAO" "LKA" "LTU" "LUX" "LVA" "MDA" "MEX" "MHL"
-  # [57] "MKD" "MLT" "MRT" "MUS" "MYS" "NLD" "NOR" "NZL"
-  # [65] "PAN" "PER" "PHL" "PRT" "PRY" "RWA" "SGP"
-  # [73] "SLB" "SUR" "SVN" "SWE" "THA" "TKM"
-  # [81] "TON" "TTO" "TZA" "UGA" "URY" "USA" "VCT" "ZAF"
-  # [89] "ZMB" "ZWE"
-  
-  # [1] "AND" "ARE" "ARG" "ARM" "AUS" "AUT" "BEL" "BGR"
-  # [9] "BHS" "BLZ" "BOL" "BRA" "BRB" "BRN" "BTN" "BWA"
-  # [17] "CAN" "CHE" "CHL" "COK" "COL" "CYP" "DEU" "DNK"
-  # [25] "DOM" "ECU" "ESP" "EST" "ETH" "FIN" "FJI" "FRA"
-  # [33] "FSM" "GBR" "GMB" "GTM" "GUY" "HND" "HUN" "IDN"
-  # [41] "IRL" "ISL" "ISR" "ITA" "JAM" "JPN" "KEN" "KOR"
-  # [49] "LAO" "LKA" "LTU" "LUX" "LVA" "MDA" "MEX" "MHL"
-  # [57] "MKD" "MLT" "MRT" "MUS" "MYS" "NLD" "NOR" "NZL"
-  # [65] "PAN" "PER" "PHL" "PLW" "PRT" "PRY" "RWA" "SGP"
-  # [73] "SLB" "SMR" "SUR" "SVN" "SWE" "SYC" "THA" "TKM"
-  # [81] "TON" "TTO" "TZA" "UGA" "URY" "USA" "ZAF"
-  # [89] "ZMB" "ZWE"
-  
   
   # create new/empty batch cohort table
   batch_cohorts <- cohorts [0, ]
@@ -376,76 +340,6 @@ compute_vaccine_impact_country <- function (allburden,
                           yll_averted_perVG    = yll_averted    / i.total_vaccines * 1000,
                           dalys_averted_perVG  = dalys_averted  / i.total_vaccines * 1000)]
   
-  # # ----------------------------------------------------------------------------
-  # # plot vaccine impact
-  # # plot lifetime health impact per 1000 vaccinated girls
-  # # plot file -- cases, deaths, ylls, ylds & dalys for 5 scenarios in 177 countries (177 pages)
-  # pdf (paste0 ("../figures/Figure-Country_vaccine_impact_age",
-  #              vaccination_age, "_", vaccine, ".pdf"))
-  # 
-  # counter <- 0   # UNCOMMENT this line for final run
-  # # counter <- 174   # COMMENT   this line for final run
-  # 
-  # # loop through each country
-  # for (countries in unique (vaccine_impact$country)) {
-  #   
-  #   if (counter < 74) {  # plot subset of countries
-  #     counter <- counter + 1
-  #     
-  #     tic ()
-  #     print (countries)
-  #     country_vaccine_impact <- vaccine_impact [country == countries]
-  #     
-  #     plotwhat <- c("cases_averted_perVG",
-  #                   "deaths_averted_perVG",
-  #                   "yld_averted_perVG",
-  #                   "yll_averted_perVG",
-  #                   "dalys_averted_perVG")
-  #     
-  #     y_axis <- c("Cases averted",
-  #                 "Deaths averted",
-  #                 "YLDs averted",
-  #                 "YLLs averted",
-  #                 "DALYs averted")
-  #     
-  #     plot_list = list ()
-  #     
-  #     plot_list <- lapply (1:length(plotwhat), function (i) {
-  #       
-  #       toplot = plotwhat[i]
-  #       
-  #       p <- ggplot (country_vaccine_impact,
-  #                    aes (x = country, y = get(toplot), fill=toplot)) +
-  #                    # aes (x = simulation, y = get(toplot), fill=toplot)) +
-  #         geom_bar (stat="identity") +
-  #         labs (
-  #           x = NULL,
-  #           y = y_axis[i]
-  #         ) +
-  #         theme_bw (base_size = 10) +
-  #         theme(legend.position="none") +
-  #         theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  #         scale_y_continuous (labels = scales::comma)
-  #     })
-  #     
-  #     # arrange plot columns and rows
-  #     q <- ggarrange(plotlist=plot_list, ncol = 2, nrow = 3)
-  #     
-  #     print (annotate_figure(q,
-  #                            top = text_grob (paste0("Lifetime health impact per 1000 vaccinated girls - ",
-  #                                                    countrycode (countries, 'iso3c', 'country.name'),
-  #                                                    "\n (vaccination age = ", vaccination_age, " years / ", vaccine_type, " vaccine)"),
-  #                                             color = "black", size = 12)))
-  #     
-  #   }
-  #   toc ()
-  #   
-  # }  # end of for loop
-  # 
-  # dev.off ()
-  # # ----------------------------------------------------------------------------
-  
-  
   # ----------------------------------------------------------------------------
   # plot file -- cases, deaths & dalys for updated scenario (s5) in 177 countries (1 page)
   pdf (paste0 ("../figures/Figure_vaccine_impact_age",
@@ -517,9 +411,7 @@ compute_vaccine_impact_country <- function (allburden,
   
   dev.off ()
   
-  
 
-  
   # ----------------------------------------------------------------------------
   
   # save streamlined table of vaccine impact
@@ -866,6 +758,8 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
 
 # ------------------------------------------------------------------------------
 # generate plot -- concentration indices by year
+# note: function not further used in this analysis
+# ------------------------------------------------------------------------------
 plot_con_index_year <- function (dt_con_index) {
   
   fig <- ggplot (dt_con_index, 
@@ -886,13 +780,13 @@ plot_con_index_year <- function (dt_con_index) {
   
   dev.off ()
   
-  
 } # end of function -- plot_con_index_year
 # ------------------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------------
 # attach World bank income levels to countries
+# -----------------------------------------------------------------------------
 world_bank_income_level <- function (countries_dt) {
   
   # download updated country and region information from World Bank API

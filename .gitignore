@@ -44,3 +44,6 @@ vignettes/*.pdf
 *.csv
 *.csv
 code/debug.R
+output/concentration_indices_impact_cases_averted.txt
+output/concentration_indices_impact_dalys_averted.txt
+output/concentration_indices_impact_deaths_averted.txt

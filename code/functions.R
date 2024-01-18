@@ -554,6 +554,7 @@ vaccine_coverage_average <- function (batch_cohorts,
 
 # ------------------------------------------------------------------------------
 # plot_hci -- plot concentration curve
+# note: not used anymore
 # ------------------------------------------------------------------------------
 plot_hci <- function(x, ...) {
 
@@ -571,7 +572,7 @@ plot_hci <- function(x, ...) {
   plot(c(1,1), xlim = c(0,1), ylim = c(0,1), type = "n",
        xlab = "fractional rank (countries with high to low vaccine impact)",
        ylab = "cumulative distribution (vaccine coverage)" ,
-       main = "Concentration Curve", ...)
+       main = "Global (84 countries)", ...)
   polygon(xCoord, cumdist, col = "light gray", ...)
 
   dev.off ()
@@ -590,6 +591,9 @@ plot_hci <- function(x, ...) {
 
 # ------------------------------------------------------------------------------
 # my_con_index_plot -- plot concentration curve (subplots by income level and region)
+# note: not used anymore
+#       -- this plots based on fractional rank (varies between 1/2n and 1 ??? (1/2n)
+#           thereby, does not include the plot connecting 0 and 1
 # ------------------------------------------------------------------------------
 my_con_index_plot <- function (con_index_a, 
                                level_a, 
@@ -620,25 +624,57 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
   # make copy of vaccine impact and coverage table
   vdt <- copy (vaccine_impact_coverage_tab)
   
+  # ----------------------------------------------------------------------------
+  # sort by vaccine impact (by deaths averted per vaccinated girl)
+  setorder (vdt, - deaths_averted_perVG)
+  # setorder (vdt, - cases_averted_perVG)
+  # setorder (vdt, - dalys_averted_perVG)
+  # ----------------------------------------------------------------------------
+  
   # add ranking column (countries with high vaccine impact to low vaccine impact)
   vdt [, ranking := 1:length (vaccine_impact_coverage_tab$country_code)]
   
   # estimate concentration index
-  con_index_all <- with (vdt, ci (x = ranking, y = coverage, type = "CIc"))
+  con_index_all <<- with (vdt, ci (x = ranking, y = coverage, type = "CIc"))
   
   # print concentration index
   print ( c (nrow (vdt), "all 84 countries") )
   print (summary (con_index_all))
   
   # plot concentration curve
-  plot_hci (con_index_all)
+  # plot_hci (con_index_all)
   
+  # ----------------------------------------------------------------------------
+  # concentration curve by -- global (84 countries)
+  # ----------------------------------------------------------------------------
+  # assign (paste0 ("subplot_", 1), as.ggplot (~my_con_index_plot (con_index_a = con_index_all,
+  #                                                                level_a     = "Global ",
+  #                                                                level_name  = " (84 countries)")))
+  
+  # generate concentration curve -- global (84 countries)
+  subplot_1 <- my_Lorenz.curve (x          = vdt$ranking, 
+                                y          = vdt$coverage,
+                                my_plot    = TRUE,
+                                level_a    = "Global ",
+                                level_name = " (84 countries)"
+                                )
+  
+  # save plot as png file
+  ggsave (filename = paste0 ("../figures/Figure_concentration_curve_global_age",
+                             vaccination_age, "_", vaccine, ".png"),
+          plot     = subplot_1,
+          dpi      = 600,
+          bg       = 'white',
+          width    = 11,
+          height   = 11,
+          units    = "in")
+  
+  # ----------------------------------------------------------------------------
   # add income level and region to countries in vaccine impact coverage table
   vaccine_impact <- merge (x   = vdt, 
                            y    = countries_wb_who_dt, 
                            by.x = "country_code", 
                            by.y = "ISO3 country code")
-  
   
   # ----------------------------------------------------------------------------
   # concentration curve by -- income level
@@ -646,7 +682,7 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
 
   # concentration curve subplots by income level
   subplots       <- length (unique (countries_wb_who_dt$`Income level`))
-  subplot_number <- 0
+  subplot_number <- 1
 
   # estimate concentration indices by levels (income levels)
   for (level in unique (countries_wb_who_dt$`Income level`) ) {
@@ -656,10 +692,12 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
     # extract rows for countries at this level
     vaccine_impact_level <- vaccine_impact [`Income level` == level]
 
+    # --------------------------------------------------------------------------
     # sort by vaccine impact (by deaths averted per vaccinated girl)
     setorder (vaccine_impact_level, - deaths_averted_perVG)
-    # setorder (vaccine_impact_tab, - cases_averted_perVG)
-    # setorder (vaccine_impact_tab, - dalys_averted_perVG)
+    # setorder (vaccine_impact_level, - cases_averted_perVG)
+    # setorder (vaccine_impact_level, - dalys_averted_perVG)
+    # --------------------------------------------------------------------------
 
     # add ranking column (countries with high vaccine impact to low vaccine impact)
     vaccine_impact_level [, ranking := 1:length (vaccine_impact_level$country_code)]
@@ -674,13 +712,22 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
     # make sure that variables in the next steps are within scope
     level_toplevel <<- level
     
-    assign (paste0 ("subplot_", subplot_number), as.ggplot (~my_con_index_plot (con_index_a = con_index,
-                                                                                level_a     = level_toplevel,
-                                                                                level_name  = " countries")))
+    # # generate concentration curve -- income levels
+    # assign (paste0 ("subplot_", subplot_number), as.ggplot (~my_con_index_plot (con_index_a = con_index,
+    #                                                                             level_a     = level_toplevel,
+    #                                                                             level_name  = " countries")))
     
+    # generate concentration curve -- income levels
+    assign (paste0 ("subplot_", subplot_number), my_Lorenz.curve (x          = vaccine_impact_level$ranking, 
+                                                                  y          = vaccine_impact_level$coverage,
+                                                                  my_plot    = TRUE,
+                                                                  level_a    = level_toplevel,
+                                                                  level_name = " countries") )
+            
   }
 
-  con_curve_level <- plot_grid (subplot_1, subplot_2, subplot_3, subplot_4, ncol = 2)
+  # concentration curve -- income levels
+  con_curve_level <- plot_grid (subplot_2, subplot_3, subplot_4, subplot_4, ncol = 2)
 
   # save plot as png file
   ggsave (filename = paste0 ("../figures/Figure_concentration_curve_income_levels_age",
@@ -700,7 +747,7 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
 
   # concentration curve subplots by income level
   subplots       <- length (unique (countries_wb_who_dt$`WHO region`))
-  subplot_number <- 0
+  subplot_number <- 5
 
   # estimate concentration indices by level (regions)
   for (level in unique (countries_wb_who_dt$`WHO region`) ) {
@@ -712,11 +759,13 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
       # extract rows for countries at this level
       vaccine_impact_level <- vaccine_impact [`WHO region` == level]
 
+      # ------------------------------------------------------------------------
       # sort by vaccine impact (by deaths averted per vaccinated girl)
       setorder (vaccine_impact_level, - deaths_averted_perVG)
-      # setorder (vaccine_impact_tab, - cases_averted_perVG)
-      # setorder (vaccine_impact_tab, - dalys_averted_perVG)
-
+      # setorder (vaccine_impact_level, - cases_averted_perVG)
+      # setorder (vaccine_impact_level, - dalys_averted_perVG)
+      # ------------------------------------------------------------------------
+      
       # add ranking column (countries with high vaccine impact to low vaccine impact)
       vaccine_impact_level [, ranking := 1:length (vaccine_impact_level$country_code)]
 
@@ -730,13 +779,22 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
       # make sure that variables in the next steps are within scope
       level_toplevel <<- level
 
-      assign (paste0 ("subplot_", subplot_number), as.ggplot (~my_con_index_plot (con_index_a = con_index,
-                                                                                  level_a     = level_toplevel,
-                                                                                  level_name = " Region")))
+      # # generate concentration curve -- income levels
+      # assign (paste0 ("subplot_", subplot_number), as.ggplot (~my_con_index_plot (con_index_a = con_index,
+      #                                                                             level_a     = level_toplevel,
+      #                                                                             level_name = " Region")))
+      
+      # generate concentration curve -- income levels
+      assign (paste0 ("subplot_", subplot_number), my_Lorenz.curve (x          = vaccine_impact_level$ranking, 
+                                                                    y          = vaccine_impact_level$coverage,
+                                                                    my_plot    = TRUE,
+                                                                    level_a    = level_toplevel,
+                                                                    level_name = " Region") )
     }
   }
 
-  con_curve_level <- plot_grid (subplot_1, subplot_2, subplot_3, subplot_4, subplot_5, ncol = 2)
+  # concentration curve -- regions
+  con_curve_level <- plot_grid (subplot_6, subplot_7, subplot_8, subplot_9, subplot_10, ncol = 2)
 
   # save plot as png file
   ggsave (filename = paste0 ("../figures/Figure_concentration_curve_regions_age",
@@ -748,6 +806,24 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
           height   = 16,
           units    = "in")
   # ----------------------------------------------------------------------------
+  
+  # concentration curve -- all (global, income levels, regions)
+  con_curve_level <- plot_grid (NULL, subplot_1, NULL, 
+                                subplot_2, subplot_3, subplot_4, subplot_5,
+                                subplot_6, subplot_7, subplot_8, subplot_9, subplot_10,
+                                ncol = 3)
+  
+  # save plot as png file
+  ggsave (filename = paste0 ("../figures/Figure_concentration_curve_all_age",
+                             vaccination_age, "_", vaccine, ".png"),
+          plot     = con_curve_level,
+          dpi      = 600,
+          bg       = 'white',
+          width    = 16,
+          height   = 20,
+          units    = "in")
+  # ----------------------------------------------------------------------------
+  
   
   # return concentration index estimates (includes mean and 95% confidence interval)
   return (con_index_all)
@@ -881,4 +957,97 @@ scatter_plot <- function (vaccine_impact_coverage_tab,
   
 } # end of function -- scatter_plot
 # ------------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------------
+# my_Lorenz.curve -- adapted from Lorenz.curve function
+# ------------------------------------------------------------------------------
+my_Lorenz.curve <- function (y, x = y, graph = FALSE, na.rm = TRUE, ties.method = c("mean", 
+                                                                 "random"), seed = NULL, weights = NULL,
+                             my_plot,
+                             level_a,
+                             level_name) 
+{
+  ties.method <- match.arg(ties.method)
+  x <- as.vector(x)
+  y <- as.vector(y)
+  if (sum(is.na(c(x, y))) > 0) {
+    if (na.rm) {
+      x.tmp <- x[!(is.na(x) | is.na(y))]
+      y.tmp <- y[!(is.na(x) | is.na(y))]
+      if (!is.null(weights)) 
+        weights <- weights[!(is.na(x) | is.na(y))]
+      x <- x.tmp
+      y <- y.tmp
+    }
+    else {
+      stop("There are missing values in either x or y and na.rm is FALSE")
+    }
+  }
+  n <- length(x)
+  if (n < 1) 
+    stop("'x' must have 1 or more non-missing values")
+  if (any(weights < 0)) 
+    stop("Weights must be nonnegative")
+  if (is.null(weights)) {
+    weights <- rep(1, n)
+  }
+  pi <- weights/sum(weights)
+  if (ties.method == "random") {
+    if (!is.null(seed)) 
+      set.seed(seed)
+    V <- stats::runif(n)
+    y <- y[order(x, V)]
+    pi <- pi[order(x, V)]
+    y_mean <- as.numeric(pi %*% y)
+    Fun <- stats::approxfun(cumsum(pi), cumsum(pi * y/y_mean), 
+                            method = "linear", yleft = 0, yright = 1, ties = "ordered")
+  }
+  if (ties.method == "mean") {
+    x_k <- sort(unique(x))
+    pi_k <- sapply(1:length(x_k), function(k) sum(pi[x == 
+                                                       x_k[k]]))
+    y_k <- sapply(1:length(x_k), function(k) as.numeric(pi[x == 
+                                                             x_k[k]] %*% y[x == x_k[k]]))
+    y_mean <- as.numeric(pi %*% y)
+    Fun <- stats::approxfun(c(0, cumsum(pi_k)), c(0, cumsum(y_k/y_mean)), 
+                            method = "linear", yleft = 0, yright = 1, ties = "ordered")
+  }
+  if (graph) {
+    if (all.equal(sort(x), sort(y)) == TRUE) {
+      txt.title <- "Lorenz curve of y"
+    }
+    else {
+      txt.title <- "Concentration curve of y wrt x"
+    }
+    print(ggplot2::ggplot(data.frame(p = c(0, 1)), aes(p)) + 
+            stat_function(fun = function(p) Fun(p), geom = "line") + 
+            stat_function(fun = function(p) p, geom = "line") + 
+            labs(x = "Cumulative share of the population", 
+                 y = "Cumulative share of y", title = txt.title))
+  }
+  
+  # ----------------------------------------------------------------------------
+  if (my_plot) {
+    
+    concentration_curve_plot <- 
+      ggplot (data.frame(p = c(0, 1)), aes(p)) + 
+      stat_function (fun = function(p) Fun(p), geom = "polygon", color = "black", fill = "lightgray") + 
+      # stat_function (fun = function(p) p, geom = "line", color = "black") + 
+      labs (x = "Countries ranked from high to low vaccine impact", 
+            y = "Cumulative distribution of vaccine coverage", 
+            title = paste0 (level_a, level_name)) +
+      theme_classic () +
+      theme (plot.title = element_text (hjust = 0.5, size = 22)) +
+      theme (axis.text  = element_text (size = 12), 
+             axis.title = element_text (size = 14))
+    
+  }
+  # ----------------------------------------------------------------------------
+  
+  return (concentration_curve_plot)
+    
+  # return(Fun)
+}
+
 

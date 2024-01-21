@@ -262,11 +262,11 @@ create_table_country_burden <- function (allburden,
   
   # save burden data table
   fwrite (burden,
-          paste0 ("../tables/Table-Cervical_cancer_burden_age",
+          paste0 ("../tables/Table_Cervical_cancer_burden_age",
                   vaccination_age, "_", vaccine, ".csv"),
           col.names = T, row.names = F)
   
-  return ()  # return null
+  return (burden)  # return null
   
 } # end of function -- create_table_country_burden
 # ------------------------------------------------------------------------------
@@ -404,6 +404,9 @@ compute_vaccine_impact_country <- function (allburden,
                                  vaccination_age, "_", vaccine, ".png"), 
               plot     = fig, 
               dpi      = 600)
+      
+      # save plot for vaccine impact
+      sub_figure_vaccine_impact <<- fig
     }
     
            
@@ -543,6 +546,9 @@ vaccine_coverage_average <- function (batch_cohorts,
                                vaccination_age, "_", vaccine, ".png"), 
             plot     = fig, 
             dpi      = 600)
+    
+    # sub figure for average vaccine coverage
+    sub_figure_vaccine_coverage_average <<- fig
     
   }
 
@@ -808,9 +814,9 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
   # ----------------------------------------------------------------------------
   
   # concentration curve -- all (global, income levels, regions)
-  con_curve_level <- plot_grid (NULL, subplot_1, NULL, 
-                                subplot_2, subplot_3, subplot_4, subplot_5,
-                                subplot_6, subplot_7, subplot_8, subplot_9, subplot_10,
+  con_curve_level <- plot_grid (NULL, subplot_1, NULL,                                  # global (84 countries)
+                                subplot_10, subplot_6, subplot_7, subplot_9, subplot_8, # WHO region
+                                subplot_2, subplot_3, subplot_4, subplot_5,             # WB income levels
                                 ncol = 3)
   
   # save plot as png file
@@ -819,6 +825,14 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
           plot     = con_curve_level,
           dpi      = 600,
           bg       = 'white',
+          width    = 16,
+          height   = 20,
+          units    = "in")
+  
+  # save plot as eps file
+  ggsave (filename = paste0 ("../figures/Figure_concentration_curve_all_age",
+                             vaccination_age, "_", vaccine, ".eps"),
+          plot     = con_curve_level, 
           width    = 16,
           height   = 20,
           units    = "in")
@@ -949,11 +963,16 @@ scatter_plot <- function (vaccine_impact_coverage_tab,
       ggsave (filename = paste0 (scatter_plot_file, ".png"), 
               plot     = fig, 
               dpi      = 600)
+      
+      # save scatter plot (for deaths averted on y-axis)
+      sub_figure_scatter_plot_impact_deaths_averted <<- fig
     }
     
   })
     
   dev.off ()
+  
+  return ()
   
 } # end of function -- scatter_plot
 # ------------------------------------------------------------------------------
@@ -1048,6 +1067,212 @@ my_Lorenz.curve <- function (y, x = y, graph = FALSE, na.rm = TRUE, ties.method 
   return (concentration_curve_plot)
     
   # return(Fun)
-}
+  
+} # end of function -- my_Lorenz.curve
+# ------------------------------------------------------------------------------
 
+
+# ------------------------------------------------------------------------------
+# create combined plot for vaccine impact versus coverage
+# ------------------------------------------------------------------------------
+create_combined_plot <- function (sub_figure_scatter_plot_impact_deaths_averted,
+                                  sub_figure_vaccine_coverage_average,
+                                  sub_figure_vaccine_impact,
+                                  sub_figure_file = paste0 ("../figures/Figure_subfigures_coverage_impact_age",
+                                                            vaccination_age, "_", vaccine)) {
+  
+  # scatter plot of vaccine coverage versus vaccine impact
+  p1 <- 
+    sub_figure_scatter_plot_impact_deaths_averted + 
+    labs (title = NULL, 
+          x     = "vaccine coverage (%)",
+          y     = "vaccine impact (deaths averted per 1000 vaccinated girls)") + 
+    scale_x_continuous (position="top") +
+    theme (axis.title = element_text(size = 10)) +
+    theme (axis.text.x = element_text (size = 8)) +
+    theme (axis.text.y = element_text (size = 8))
+    # scale_y_reverse ()
+  
+  # plot of vaccine coverage
+  p2 <- 
+    sub_figure_vaccine_coverage_average + 
+    coord_flip () + 
+    labs (title = NULL) +
+    theme (axis.title = element_text(size = 10)) +
+    theme (axis.text.x = element_text (angle = -360, size = 8)) +
+    scale_y_continuous (position = "right") +
+    scale_x_discrete (limits = rev)
+  
+  # plot of vaccine impact
+  p3 <- 
+    sub_figure_vaccine_impact + 
+    coord_flip () + 
+    labs (title = NULL, 
+          y     = "deaths averted per 1000 vaccinated girls") + 
+    theme (axis.title = element_text(size = 10)) +
+    theme (axis.text.x = element_text (angle = -360, size = 8)) +
+    scale_y_continuous (position = "right") +
+    scale_x_discrete (limits = rev)
+  
+  # combined plot for vaccine impact versus coverage
+  combined_plot_coverage_impact <- plot_grid (p1,
+                                              p2,
+                                              p3,
+                                              nrow = 1)
+  
+  # save plot as png file
+  ggsave (filename = paste0 (sub_figure_file, ".png"),
+          plot     = combined_plot_coverage_impact,
+          dpi      = 600,
+          bg       = 'white',
+          width    = 10,
+          height   = 9,
+          units    = "in")
+  
+  
+  # save plot as eps file
+  ggsave (filename = paste0 (sub_figure_file, ".eps"),
+          plot     = combined_plot_coverage_impact, 
+          width    = 10,
+          height   = 9,
+          units    = "in")
+  
+  return ()
+  
+} # end of function -- create_combined_plot
+# ------------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------------
+# 1. create combined table for cervical cancer burden plus who region and income level
+# 
+# 2. create combined table of coverage and impact (sorted by deaths averted per 1000 vaccinated girls)
+# plus who region and income level
+# two files -- (i) rounded values (for main text) (ii) full values (appendix spreadsheet file)
+# ------------------------------------------------------------------------------
+create_combined_table <- function (burden_country,
+                                   cervical_cancer_burden_file,
+                                   vaccine_impact_coverage_tab,
+                                   countries_wb_who_dt,
+                                   vaccine_impact_coverage_file) {
+  
+  # ----------------------------------------------------------------------------
+  # 1. create combined table for cervical cancer burden plus who region and income level
+  # ----------------------------------------------------------------------------
+  
+  # add income level and region to countries in cervical cancer burden table
+  cervical_cancer_burden <- merge (x   = burden_country, 
+                                   y    = countries_wb_who_dt, 
+                                   by.x = "country", 
+                                   by.y = "ISO3 country code")
+  
+  # update column names
+  setnames (cervical_cancer_burden, 
+            old = c ("Country.x", 
+                     "country"), 
+            new = c ("Country", 
+                     "ISO3 code") )
+  
+  # drop column
+  cervical_cancer_burden [, Country.y := NULL] 
+  
+  # set column order
+  setcolorder (cervical_cancer_burden, 
+               neworder = c ("Country", 
+                             "ISO3 code",
+                             "WHO region",
+                             "Income level"))
+  
+  # save file -- cervical cancer burden table
+  fwrite (x    = cervical_cancer_burden,
+          file = cervical_cancer_burden_file)
+  # ----------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
+  
+  
+  # ----------------------------------------------------------------------------
+  # 2. create combined table of coverage and impact (sorted by deaths averted per 1000 vaccinated girls)
+  # plus who region and income level
+  # two files -- (i) rounded values (for main text) (ii) full values (appendix spreadsheet file)
+  # ----------------------------------------------------------------------------
+  
+  # add income level and region to countries in vaccine impact coverage table
+  vaccine_impact <- merge (x   = vaccine_impact_coverage_tab, 
+                           y    = countries_wb_who_dt, 
+                           by.x = "country_code", 
+                           by.y = "ISO3 country code")
+  
+  
+  # sort by impact (sorted by deaths averted per 1000 vaccinated girls)
+  vaccine_impact <- vaccine_impact [order(-deaths_averted_perVG)]
+  
+  
+  # set column order
+  setcolorder (vaccine_impact, 
+               neworder = c ("Country.x", 
+                             "country_code",
+                             "WHO region",
+                             "Income level",
+                             "coverage",
+                             "deaths_averted_perVG",
+                             "cases_averted_perVG",
+                             "dalys_averted_perVG") )
+  
+  # keep columns
+  vaccine_impact <- vaccine_impact [, c ("Country.x", 
+                                         "country_code",
+                                         "WHO region",
+                                         "Income level",
+                                         "coverage",
+                                         "deaths_averted_perVG",
+                                         "cases_averted_perVG",
+                                         "dalys_averted_perVG")]
+  
+  # change coverage to percentage units
+  vaccine_impact [, coverage := coverage * 100]
+  
+  # round numbers
+  # vaccine_impact [, coverage             := round (coverage * 100)]
+  # vaccine_impact [, deaths_averted_perVG := round (deaths_averted_perVG)]
+  # vaccine_impact [, cases_averted_perVG  := round (cases_averted_perVG)]
+  # vaccine_impact [, dalys_averted_perVG  := round (dalys_averted_perVG)]
+  
+  
+  # update column names
+  setnames (vaccine_impact, 
+            old = c ("Country.x", 
+                     "country_code", 
+                     "coverage",
+                     "deaths_averted_perVG",
+                     "cases_averted_perVG",
+                     "dalys_averted_perVG"), 
+            new = c ("Country", 
+                     "ISO3 code", 
+                     "HPV vaccine coverage (%)",
+                     "Deaths averted per 1000 vaccinated girls",
+                     "Cases averted per 1000 vaccinated girls",
+                     "DALYs averted per 1000 vaccinated girls") )
+  
+  # ----------------------------------------------------------------------------
+  # save file -- table of coverage and impact (no rounding of values)
+  fwrite (x    = vaccine_impact,
+          file = paste0 (vaccine_impact_coverage_file, ".csv"))
+  # ----------------------------------------------------------------------------
+  
+  # round numbers
+  vaccine_impact [, `HPV vaccine coverage (%)`                 := round (`HPV vaccine coverage (%)`)]
+  vaccine_impact [, `Deaths averted per 1000 vaccinated girls` := round (`Deaths averted per 1000 vaccinated girls`)]
+  vaccine_impact [, `Cases averted per 1000 vaccinated girls`  := round (`Cases averted per 1000 vaccinated girls`)]
+  vaccine_impact [, `DALYs averted per 1000 vaccinated girls`  := round (`DALYs averted per 1000 vaccinated girls`)]
+  
+  # ----------------------------------------------------------------------------
+  # save file -- table of coverage and impact (rounding of values)
+  fwrite (x    = vaccine_impact,
+          file = paste0 (vaccine_impact_coverage_file, "_rounded_values.csv"))
+  # ----------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
+
+  return ()
+} # end of function -- create_combined_table
+# ------------------------------------------------------------------------------
 

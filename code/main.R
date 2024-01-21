@@ -74,9 +74,9 @@ allburden <- combine_burden_estimate (vaccine,
                                       results_file) 
 
 # create table of country-specific cervical cancer burden
-create_table_country_burden (allburden,
-                             vaccine         = vaccine,
-                             vaccination_age = vaccination_age)
+burden_country <- create_table_country_burden (allburden,
+                                               vaccine         = vaccine,
+                                               vaccination_age = vaccination_age)
 
 # compute vaccine impact -- country level
 vaccine_impact_tab <- compute_vaccine_impact_country (allburden,
@@ -127,8 +127,32 @@ print (summary (con_index_all))
 
 scatter_plot (vaccine_impact_coverage_tab, 
               scatter_plot_file = paste0 ("../figures/Figure_scatterplot_coverage_impact_age",
-                                  vaccination_age, "_", vaccine))
+                                          vaccination_age, "_", vaccine))
 
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# create combined plot for vaccine impact versus coverage
+create_combined_plot (sub_figure_scatter_plot_impact_deaths_averted,
+                      sub_figure_vaccine_coverage_average,
+                      sub_figure_vaccine_impact,
+                      sub_figure_file = paste0 ("../figures/Figure_subfigures_coverage_impact_age",
+                                                vaccination_age, "_", vaccine))
+
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# 1. create combined table for cervical cancer burden plus who region and income level
+# 
+# 2. create combined table of coverage and impact (sorted by deaths averted per 1000 vaccinated girls)
+# plus who region and income level
+# two files -- (i) rounded values (for main text) (ii) full values (appendix spreadsheet file)
+# ------------------------------------------------------------------------------
+create_combined_table (burden_country,
+                       cervical_cancer_burden_file  = "../tables/Table_cervical_cancer_burden.csv",
+                       vaccine_impact_coverage_tab,
+                       countries_wb_who_dt,
+                       vaccine_impact_coverage_file = "../tables/Table_HPV_coverage_impact")
 # ------------------------------------------------------------------------------
 
 # close file -- output of concentration indices
@@ -140,3 +164,42 @@ stopCluster (cl)
 # stop time
 print (Sys.time ())
 toc ()
+
+
+# ------------------------------------------------------------------------------
+# Notes:
+# 
+# ------------------------------------------------------------------------------
+# To generate some of the figures, run code specific to -- sort by vaccine impact (by deaths/cases/DALYs averted per vaccinated girl)
+#  (i) main.R: change at 1 location
+# (ii) functions.R: change at 3 locations in function "concentration_index_curve"
+# ------------------------------------------------------------------------------
+# sort by vaccine impact (by deaths averted per vaccinated girl)
+# setorder (vaccine_impact_tab, - deaths_averted_perVG) 
+# setorder (vaccine_impact_tab, - cases_averted_perVG)
+# setorder (vaccine_impact_tab, - dalys_averted_perVG)
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+# Tables for main text
+#  (i) Table_HPV_coverage_impact_rounded_values.csv
+# (ii) concentration index values are extracted from sink files (../output/concentration_indices.txt)
+#
+# Figures for main text
+#  (i) Figure_subfigures_coverage_impact_age14_4vHPV.eps --> copy to Figure_1_coverage_impact.eps
+#          note: this figure is specific to -- sort by vaccine impact (by deaths averted per vaccinated girl)
+# (ii) Figure_concentration_curve_all_age14_4vHPV.eps --> copy to Figure_2_concentration_curves.eps 
+#          note: concentration curves are specific to -- sort by vaccine impact (by deaths averted per vaccinated girl)
+#
+# Figures for appendix
+# Figure A1. Health impact of HPV vaccination --> Figure_vaccine_impact_age14_4vHPV.pdf 
+# Figure A2. HPV vaccination coverage and impact --> Figure_scatterplot_coverage_impact_age14_4vHPV.pdf
+# Figure A3. Inequities in HPV vaccination coverage and impact --> Figure_concentration_curve_all_age14_4vHPV.png (.eps)
+#               note: concentration curves are specific to -- sort by vaccine impact (by cases/DALYs averted per vaccinated girl)
+#
+# spreadsheet files for appendix (../tables/)
+# (i)  Table_cervical_cancer_burden.csv
+# (ii) Table_HPV_coverage_impact.csv
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------

@@ -631,7 +631,7 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
   vdt <- copy (vaccine_impact_coverage_tab)
   
   # ----------------------------------------------------------------------------
-  # sort by vaccine impact (by deaths averted per vaccinated girl)
+  # sort by vaccine impact (by deaths/cases/dalys averted per vaccinated girl)
   setorder (vdt, - deaths_averted_perVG)
   # setorder (vdt, - cases_averted_perVG)
   # setorder (vdt, - dalys_averted_perVG)
@@ -699,7 +699,7 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
     vaccine_impact_level <- vaccine_impact [`Income level` == level]
 
     # --------------------------------------------------------------------------
-    # sort by vaccine impact (by deaths averted per vaccinated girl)
+    # sort by vaccine impact (by deaths/cases/dalys averted per vaccinated girl)
     setorder (vaccine_impact_level, - deaths_averted_perVG)
     # setorder (vaccine_impact_level, - cases_averted_perVG)
     # setorder (vaccine_impact_level, - dalys_averted_perVG)
@@ -766,7 +766,7 @@ concentration_index_curve <- function (vaccine_impact_coverage_tab,
       vaccine_impact_level <- vaccine_impact [`WHO region` == level]
 
       # ------------------------------------------------------------------------
-      # sort by vaccine impact (by deaths averted per vaccinated girl)
+      # sort by vaccine impact (by deaths/cases/dalys averted per vaccinated girl)
       setorder (vaccine_impact_level, - deaths_averted_perVG)
       # setorder (vaccine_impact_level, - cases_averted_perVG)
       # setorder (vaccine_impact_level, - dalys_averted_perVG)

@@ -84,7 +84,7 @@ vaccine_impact_tab <- compute_vaccine_impact_country (allburden,
                                                       vaccination_age = vaccination_age)
 
 # ------------------------------------------------------------------------------
-# sort by vaccine impact (by deaths averted per vaccinated girl)
+# sort by vaccine impact (by deaths/cases/dalys averted per vaccinated girl)
 setorder (vaccine_impact_tab, - deaths_averted_perVG) 
 # setorder (vaccine_impact_tab, - cases_averted_perVG)
 # setorder (vaccine_impact_tab, - dalys_averted_perVG)
@@ -171,8 +171,8 @@ toc ()
 # 
 # ------------------------------------------------------------------------------
 # To generate some of the figures, run code specific to -- sort by vaccine impact (by deaths/cases/DALYs averted per vaccinated girl)
-#  (i) main.R: change at 1 location
-# (ii) functions.R: change at 3 locations in function "concentration_index_curve"
+#  (i) main.R: change at 1 location (line 87)
+# (ii) functions.R: change at 3 locations (lines 634, 702, 769) in function "concentration_index_curve"
 # ------------------------------------------------------------------------------
 # sort by vaccine impact (by deaths averted per vaccinated girl)
 # setorder (vaccine_impact_tab, - deaths_averted_perVG) 
@@ -189,6 +189,7 @@ toc ()
 # Figures for main text
 #  (i) Figure_subfigures_coverage_impact_age14_4vHPV.eps --> copy to Figure_1_coverage_impact.eps
 #          note: this figure is specific to -- sort by vaccine impact (by deaths averted per vaccinated girl)
+#                currently not generated for cases/dalys averted per vaccinated girl
 # (ii) Figure_concentration_curve_all_age14_4vHPV.eps --> copy to Figure_2_concentration_curves.eps 
 #          note: concentration curves are specific to -- sort by vaccine impact (by deaths averted per vaccinated girl)
 #
